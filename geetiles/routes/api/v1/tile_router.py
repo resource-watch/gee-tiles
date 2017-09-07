@@ -37,7 +37,6 @@ def get_tile(layer, type, z, x, y, map_object=None, layer_obj=None):
     
     
     
-    # .getMapId({'opacity':1, 'gain':3, 'bias': 5, 'gamma':1.1,format:'png'});    
     url = ee.data.getTileUrl(map_object, int(x), int(y), int(z))
     storage_url = StorageService.upload_file(url, layer, z, x, y);
     logging.debug('Storageurl')
