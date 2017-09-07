@@ -1,5 +1,5 @@
 {
-	"name": "#(service.name)",
+	"name": "gee-tiles",
 	"endpoints": [{
 		"path": "/v1/layer/:layer/tile/:type/:z/:x/:y",
 		"method": "GET",

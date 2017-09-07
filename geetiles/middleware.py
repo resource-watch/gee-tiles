@@ -3,8 +3,9 @@ import logging
 from functools import wraps
 from flask import request, redirect
 
-from ps.services.redis_service import RedisService
-from ps.services.layer_service import LayerService
+from geetiles.services.redis_service import RedisService
+from geetiles.services.layer_service import LayerService
+from geetiles.routes.api import error
 
 
 def exist_tile(func):
@@ -31,9 +32,12 @@ def get_layer(func):
     """Get geodata"""
     @wraps(func)
     def wrapper(*args, **kwargs):
-        if kwargs['map_object'] == None:
-            layer = kwargs['layer']         
-            logging.debug('Getting layer ' + layer)
-            kwargs["layer_obj"] = LayerService.get(layer)
-        return func(*args, **kwargs)
+        try:
+            if kwargs['map_object'] == None:
+                layer = kwargs['layer']         
+                logging.debug('Getting layer ' + layer)
+                kwargs["layer_obj"] = LayerService.get(layer)
+            return func(*args, **kwargs)
+        except Exception as e:
+            return error(detail=e.message)
     return wrapper

@@ -1,7 +1,7 @@
 """Main Script"""
 
 import os
-from ps import app
+from geetiles import app
 
 
 # This is only used when running locally. When running live, Gunicorn runs

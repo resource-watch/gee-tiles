@@ -3,7 +3,7 @@ import logging
 import redis
 import json
 
-from ps.config import SETTINGS
+from geetiles.config import SETTINGS
 
 r = redis.StrictRedis.from_url( url=SETTINGS.get('redis').get('url') )
 

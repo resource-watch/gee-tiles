@@ -4,7 +4,7 @@ import redis
 import json
 
 
-from ps.errors import LayerNotFound
+from geetiles.errors import LayerNotFound
 from CTRegisterMicroserviceFlask import request_to_microservice
 
 class LayerService(object):

@@ -2,5 +2,5 @@
 
 from functools import wraps
 
-from ps.routes.api import error
+from geetiles.routes.api import error
 
