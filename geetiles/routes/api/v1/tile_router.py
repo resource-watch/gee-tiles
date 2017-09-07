@@ -24,9 +24,9 @@ def get_tile(layer, type, z, x, y, map_object=None, layer_obj=None):
     if map_object == None:
         logging.debug('Generating mapid')
         style_type = layer_obj.get('layerConfig').get('body').get('styleType');
+        image = layer_obj.get('layerConfig').get('assetId')
         if style_type == 'sld':
             style=layer_obj.get('layerConfig').get('body').get('sldValue')
-            image = layer_obj.get('layerConfig').get('assetId')
             map_object = ee.Image(image).sldStyle(style).getMapId();
         else:
             map_object = ee.Image(image).getMapId(layer_obj.get('layerConfig').get('body'))
