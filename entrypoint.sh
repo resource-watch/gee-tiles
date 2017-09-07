@@ -10,7 +10,7 @@ case "$1" in
         ;;
     test)
         echo "Test"
-        exec python test.py
+        
         ;;
     start)
         echo "Running Start"
