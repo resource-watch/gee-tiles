@@ -3,6 +3,7 @@ import logging
 from functools import wraps
 from flask import request, redirect
 
+from geetiles.errors import LayerNotFound, Error
 from geetiles.services.redis_service import RedisService
 from geetiles.services.layer_service import LayerService
 from geetiles.routes.api import error
@@ -38,6 +39,8 @@ def get_layer(func):
                 logging.debug('Getting layer ' + layer)
                 kwargs["layer_obj"] = LayerService.get(layer)
             return func(*args, **kwargs)
+        except LayerNotFound as e:
+            return error(status=404, detail=e.message)
         except Exception as e:
-            return error(detail=e.message)
+            return error(detail='Generic error')
     return wrapper
