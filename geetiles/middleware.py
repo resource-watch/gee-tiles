@@ -3,7 +3,7 @@ import logging
 from functools import wraps
 from flask import request, redirect
 
-from geetiles.errors import LayerNotFound, Error
+from geetiles.errors import LayerNotFound
 from geetiles.services.redis_service import RedisService
 from geetiles.services.layer_service import LayerService
 from geetiles.routes.api import error
@@ -14,11 +14,13 @@ def exist_tile(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         url = RedisService.get(request.path)
-        if url == None:
+        if url is None:
             return func(*args, **kwargs)
         else:
             return redirect(url)
     return wrapper
+
+
 def exist_mapid(func):
     """Get geodata"""
     @wraps(func)
@@ -29,13 +31,14 @@ def exist_mapid(func):
         return func(*args, **kwargs)
     return wrapper
 
+
 def get_layer(func):
     """Get geodata"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            if kwargs['map_object'] == None:
-                layer = kwargs['layer']         
+            if kwargs['map_object'] is None:
+                layer = kwargs['layer']
                 logging.debug('Getting layer ' + layer)
                 kwargs["layer_obj"] = LayerService.get(layer)
             return func(*args, **kwargs)

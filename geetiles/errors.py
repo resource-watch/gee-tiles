@@ -12,5 +12,6 @@ class Error(Exception):
             'message': self.message
         }
 
+
 class LayerNotFound(Error):
     pass
