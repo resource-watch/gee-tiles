@@ -4,7 +4,7 @@ develop:
     service: base
   ports:
     - "35733:35730"
-  container_name: python-skeleton-develop
+  container_name: gee-tile-develop
   environment:
     CT_REGISTER_MODE: auto
     ENVIRONMENT: dev
@@ -17,10 +17,10 @@ develop:
     EE_PRIVATE_KEY: ${EE_PRIVATE_KEY}
     GCLOUD_STORAGE: ${GCLOUD_STORAGE}
     REDIS_URL: redis://redis:6379
-    GOOGLE_APPLICATION_CREDENTIALS: /opt/ps/storage.json
+    GOOGLE_APPLICATION_CREDENTIALS: /opt/geetiles/storage.json
   command: develop
   volumes:
-    - ./ps:/opt/ps/ps
+    - ./geetiles:/opt/geetiles/geetiles
   restart: always
   links:
     - redis

@@ -1,7 +1,7 @@
 """-"""
 
 import os
-from ps.utils.files import BASE_DIR
+from geetiles.utils.files import BASE_DIR
 
 
 SETTINGS = {

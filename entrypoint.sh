@@ -10,13 +10,13 @@ case "$1" in
         ;;
     test)
         echo "Test"
-        exec python test.py
+        
         ;;
     start)
         echo "Running Start"
         echo -e "$EE_PRIVATE_KEY" | base64 -d > privatekey.pem
         echo -e "$GCLOUD_STORAGE" | base64 -d > storage.json
-        exec gunicorn -c gunicorn.py ps:app
+        exec gunicorn -c gunicorn.py geetiles:app
         ;;
     *)
         exec "$@"

@@ -9,10 +9,10 @@ import ee
 from oauth2client.service_account import ServiceAccountCredentials
 
 from flask import Flask
-from ps.config import SETTINGS
-from ps.routes.api import error
-from ps.routes.api.v1 import tile_endpoints
-from ps.utils.files import load_config_json
+from geetiles.config import SETTINGS
+from geetiles.routes.api import error
+from geetiles.routes.api.v1 import tile_endpoints
+from geetiles.utils.files import load_config_json
 import CTRegisterMicroserviceFlask
 
 

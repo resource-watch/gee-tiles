@@ -50,6 +50,24 @@ spec:
                 secretKeyRef:
                   name: mssecrets
                   key: API_VERSION
+          - name: GCLOUD_STORAGE
+            valueFrom:
+                secretKeyRef:
+                  name: mssecrets
+                  key: GCLOUD_BACKUPS_CREDENTIALS
+          - name: EE_PRIVATE_KEY
+            valueFrom:
+                secretKeyRef:
+                  name: mssecrets
+                  key: EE_PRIVATE_KEY
+          - name: REDIS_URL
+            valueFrom:
+                secretKeyRef:
+                  name: dbsecrets
+                  key: GEE_TILES_REDIS_URI
+          - name: GOOGLE_APPLICATION_CREDENTIALS
+            value: /opt/geetiles/storage.json
+          
 
         ports:
           - containerPort: 5700

@@ -1,11 +1,19 @@
 {
-	"name": "#(service.name)",
+	"name": "gee-tiles",
 	"endpoints": [{
 		"path": "/v1/layer/:layer/tile/:type/:z/:x/:y",
 		"method": "GET",
 		"redirect": {
 			"method": "GET",
 			"path": "/api/v1/layer/:layer/tile/:type/:z/:x/:y"
+		}
+	}, {
+		"path": "/v1/layer/:layer/expire-cache",
+		"method": "DELETE",
+		"authenticated": true,
+		"redirect": {
+			"method": "DELETE",
+			"path": "/api/v1/layer/:layer/expire-cache"
 		}
 	}]
 }

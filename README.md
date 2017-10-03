@@ -1,4 +1,4 @@
-# Python Skeleton for Micorservices
+# Gee tile server for Micorservices
 
 ## Getting started
 
@@ -13,14 +13,14 @@ Follow the next steps to set up the development environment in your machine.
 1. Clone the repo and go to the folder
 
 ```ssh
-git clone https://github.com/Vizzuality/python-skeleton
+git clone https://github.com/resource-watch/gee-tiles
 cd python-skeleton
 ```
 
-2. Run the ms.sh shell script in development mode.
+2. Run the geetiles.sh shell script in development mode.
 
 ```ssh
-./ps.sh develop
+./geetiles.sh develop
 ```
 
 If this is the first time you run it, it may take a few minutes.
