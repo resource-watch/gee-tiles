@@ -1,4 +1,5 @@
 import logging
+import json
 
 from functools import wraps
 from flask import request, redirect
@@ -31,13 +32,26 @@ def exist_mapid(func):
         return func(*args, **kwargs)
     return wrapper
 
+def is_microservice(func):
+    """Get geodata"""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        logging.debug("Checking microservice user")        
+        logged_user = json.loads(request.args.get("loggedUser", None))
+        if logged_user.get("id") == "microservice":
+            logging.debug("is microservice");
+            return func(*args, **kwargs)
+        else:
+            return error(status=403, detail="Not authorized")
+    return wrapper
+
 
 def get_layer(func):
     """Get geodata"""
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            if kwargs['map_object'] is None:
+            if kwargs['map_object'] is None: 
                 layer = kwargs['layer']
                 logging.debug('Getting layer ' + layer)
                 kwargs["layer_obj"] = LayerService.get(layer)

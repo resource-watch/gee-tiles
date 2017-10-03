@@ -2,6 +2,7 @@
 
 import redis
 import json
+import logging
 
 from geetiles.config import SETTINGS
 
@@ -26,6 +27,11 @@ class RedisService(object):
     @staticmethod
     def set(key, value):
         return r.set(key, value)
+
+    @staticmethod
+    def expire_layer(layer):
+        for key in r.scan_iter("*"+layer+"*"):
+            r.delete(key)
 
     @staticmethod
     def set_layer_mapid(layer, mapid, token):
