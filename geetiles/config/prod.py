@@ -2,6 +2,6 @@
 
 SETTINGS = {
     'logging': {
-        'level': 'DEBUG'
+        'level': 'INFO'
     }
 }
