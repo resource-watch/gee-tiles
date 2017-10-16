@@ -14,22 +14,21 @@ import ee
 tile_endpoints = Blueprint('tile_endpoints', __name__)
 
 
-
 @tile_endpoints.route('/<layer>/expire-cache', strict_slashes=False, methods=['DELETE'])
 @is_microservice
 def expire_cache(layer):
     """Expire cache tile layer Endpoint"""
-    logging.info('[ROUTER]: Expire cache tile')    
-    RedisService.expire_layer(layer);
-    StorageService.delete_folder(layer);
-    
+    logging.info('[ROUTER]: Expire cache tile')
+    RedisService.expire_layer(layer)
+    StorageService.delete_folder(layer)
     return "", 200
 
-@tile_endpoints.route('/<layer>/tile/<type>/<z>/<x>/<y>', strict_slashes=False, methods=['GET'])
+
+@tile_endpoints.route('/<layer>/tile/gee/<z>/<x>/<y>', strict_slashes=False, methods=['GET'])
 @exist_tile
 @exist_mapid
 @get_layer
-def get_tile(layer, type, z, x, y, map_object=None, layer_obj=None):
+def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
     """Get tile Endpoint"""
     logging.info('[ROUTER]: Get tile')
     logging.info(map_object)
@@ -46,13 +45,10 @@ def get_tile(layer, type, z, x, y, map_object=None, layer_obj=None):
 
         logging.debug('Saving in cache')
         RedisService.set_layer_mapid(layer, map_object.get('mapid'), map_object.get('token'))
-
     try:
         url = ee.data.getTileUrl(map_object, int(x), int(y), int(z))
         storage_url = StorageService.upload_file(url, layer, z, x, y)
     except Exception as e:
         logging.error(str(e))
         return error(status=404, detail='Tile Not Found')
-
-
     return redirect(storage_url)
