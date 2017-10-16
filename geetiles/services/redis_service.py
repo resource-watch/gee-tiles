@@ -35,4 +35,4 @@ class RedisService(object):
 
     @staticmethod
     def set_layer_mapid(layer, mapid, token):
-        return r.setex(layer, json.dumps({'mapid': mapid, 'token': token}), 2 * 24 * 60 * 60)
+        return r.set(layer, json.dumps({'mapid': mapid, 'token': token}), ex=2 * 24 * 60 * 60)
