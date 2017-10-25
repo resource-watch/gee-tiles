@@ -5,7 +5,7 @@ import json
 
 from flask import jsonify, Blueprint, redirect, request
 from geetiles.routes.api import error
-from geetiles.middleware import exist_mapid, get_layer, exist_tile, is_microservice
+from geetiles.middleware import exist_mapid, get_layer, exist_tile, is_microservice_or_admin
 from geetiles.services.redis_service import RedisService
 from geetiles.services.storage_service import StorageService
 import ee
@@ -15,7 +15,7 @@ tile_endpoints = Blueprint('tile_endpoints', __name__)
 
 
 @tile_endpoints.route('/<layer>/expire-cache', strict_slashes=False, methods=['DELETE'])
-@is_microservice
+@is_microservice_or_admin
 def expire_cache(layer):
     """Expire cache tile layer Endpoint"""
     logging.info('[ROUTER]: Expire cache tile')
