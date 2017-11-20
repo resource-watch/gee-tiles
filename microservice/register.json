@@ -6,7 +6,25 @@
 		"redirect": {
 			"method": "GET",
 			"path": "/api/v1/layer/:layer/tile/gee/:z/:x/:y"
-		}
+		},
+		"filters": [
+			{
+				"name": "dataset",
+				"path": "/v1/dataset/:dataset",
+				"method": "GET",
+				"params": {
+					"dataset": "dataset"
+				},
+				"compare": {
+					"data": {
+						"attributes": {
+							"provider": "gee",
+							"status": "saved"
+						}
+					}
+				}
+			}
+		]
 	}, {
 		"path": "/v1/layer/:layer/expire-cache",
 		"method": "DELETE",
@@ -14,6 +32,24 @@
 		"redirect": {
 			"method": "DELETE",
 			"path": "/api/v1/layer/:layer/expire-cache"
-		}
+		},
+		"filters": [
+			{
+				"name": "dataset",
+				"path": "/v1/dataset/:dataset",
+				"method": "GET",
+				"params": {
+					"dataset": "dataset"
+				},
+				"compare": {
+					"data": {
+						"attributes": {
+							"provider": "gee",
+							"status": "saved"
+						}
+					}
+				}
+			}
+		]
 	}]
 }

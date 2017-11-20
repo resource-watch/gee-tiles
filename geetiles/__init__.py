@@ -46,7 +46,7 @@ info = load_config_json('register')
 swagger = load_config_json('swagger')
 CTRegisterMicroserviceFlask.register(
     app=app,
-    name='ps',
+    name='gee-tiles',
     info=info,
     swagger=swagger,
     mode=CTRegisterMicroserviceFlask.AUTOREGISTER_MODE if os.getenv('CT_REGISTER_MODE') and os.getenv('CT_REGISTER_MODE') == 'auto' else CTRegisterMicroserviceFlask.NORMAL_MODE,

@@ -16,7 +16,7 @@ case "$1" in
         echo "Running Start"
         echo -e "$EE_PRIVATE_KEY" | base64 -d > privatekey.pem
         echo -e "$GCLOUD_STORAGE" | base64 -d > storage.json
-        exec python main.py
+        exec gunicorn -c gunicorn.py geetiles:app
         ;;
     *)
         exec "$@"
