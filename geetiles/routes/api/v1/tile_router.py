@@ -39,8 +39,6 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
         image = layer_obj.get('layerConfig').get('assetId')
         if style_type == 'sld':
             style = layer_obj.get('layerConfig').get('body').get('sldValue')
-            logging.info('Style')
-            logging.info(style);
             map_object = ee.Image(image).sldStyle(style).getMapId()
         else:
             map_object = ee.Image(image).getMapId(layer_obj.get('layerConfig').get('body'))
@@ -49,7 +47,7 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
         RedisService.set_layer_mapid(layer, map_object.get('mapid'), map_object.get('token'))
     try:
         url = ee.data.getTileUrl(map_object, int(x), int(y), int(z))
-        storage_url = StorageService.upload_file(url, layer, z, x, y)
+        storage_url = StorageService.upload_file(url, layer, map_object.get('mapid'), z, x, y)
     except Exception as e:
         logging.error(str(e))
         return error(status=404, detail='Tile Not Found')
