@@ -62,7 +62,7 @@ def forbidden(e):
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return error(status=404, detail='Not Found')
+    return error(status=404, detail='Not Found (404)')
 
 
 @app.errorhandler(405)
