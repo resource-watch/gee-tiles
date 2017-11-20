@@ -14,6 +14,23 @@
 		"redirect": {
 			"method": "DELETE",
 			"path": "/api/v1/layer/:layer/expire-cache"
-		}
+		},
+		"filters": [
+            {
+                "name": "layer",
+                "path": "/v1/layer/:layer",
+                "method": "GET",
+                "params": {
+                    "layer": "layer"
+                },
+                "compare": {
+                    "data": {
+                        "attributes": {
+                            "provider": "gee"
+                        }
+                    }
+                }
+            }
+        ]
 	}]
 }
