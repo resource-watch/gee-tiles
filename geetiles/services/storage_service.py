@@ -27,7 +27,7 @@ class StorageService(object):
         logging.debug("Folder removed")
 
     @staticmethod
-    def upload_file(url, layer, map_id z, x, y):
+    def upload_file(url, layer, map_id, z, x, y):
         name = str(uuid.uuid4()) + '.png'
         urlretrieve(url, name)
 
