@@ -27,12 +27,12 @@ class StorageService(object):
         logging.debug("Folder removed")
 
     @staticmethod
-    def upload_file(url, layer, z, x, y):
+    def upload_file(url, layer, map_id z, x, y):
         name = str(uuid.uuid4()) + '.png'
         urlretrieve(url, name)
 
         bucket = client.get_bucket('gee-tiles')
-        blob = bucket.blob(layer + '/' + z + '/' + x + '/' + y + '/' + 'tile.png')
+        blob = bucket.blob(layer + '/' + z + '/' + x + '/' + y + '/' + 'tile_' + map_id + '.png')
         with open(name, 'rb') as my_file:
             blob.upload_from_file(my_file)
             blob.make_public()
