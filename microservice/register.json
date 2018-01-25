@@ -1,5 +1,7 @@
 {
 	"name": "gee-tiles",
+	"cache": ["gee-tiles"],
+	"uncache": ["gee-tiles"],
 	"endpoints": [{
 		"path": "/v1/layer/:layer/tile/gee/:z/:x/:y",
 		"method": "GET",
