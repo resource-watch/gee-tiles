@@ -32,19 +32,38 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
     """Get tile Endpoint"""
     logging.info('[ROUTER]: Get tile')
     logging.info(map_object)
-    if map_object is None:
-        logging.debug('Generating mapid')
-        style_type = layer_obj.get('layerConfig').get('body').get('styleType')
-        
-        image = layer_obj.get('layerConfig').get('assetId')
-        if style_type == 'sld':
-            style = layer_obj.get('layerConfig').get('body').get('sldValue')
-            map_object = ee.Image(image).sldStyle(style).getMapId()
-        else:
-            map_object = ee.Image(image).getMapId(layer_obj.get('layerConfig').get('body'))
+    try:
+        if map_object is None:
+            logging.debug('Generating mapid')
+            layer_config = layer_obj.get('layerConfig')
+            style_type = layer_config.get('body').get('styleType')
+            image = None
+            if 'isImageCollection' not in layer_config or not layer_config.get('isImageCollection'):
+                image = ee.Image(layer_config.get('assetId'))
+            else:
+                position = layer_config.get('position')
+                image_col = ee.ImageCollection(layer_config.get('assetId'))
+                if 'filterDates' in layer_config:
+                    dates = layer_config.get('filterDates')
+                    image_col = image_col.filterDate(dates[0], dates[1])
+                if position == 'first':
+                    logging.info('Obtaining first')
+                    image = ee.Image(image_col.sort('system:time_start', True).first())
+                else:
+                    logging.info('Obtaining last')
+                    image = ee.Image(image_col.sort('system:time_start', False).first())
+            
+            if style_type == 'sld':
+                style = layer_config.get('body').get('sldValue')
+                map_object = image.sldStyle(style).getMapId()
+            else:
+                map_object = image.getMapId(layer_config.get('body'))
 
-        logging.debug('Saving in cache')
-        RedisService.set_layer_mapid(layer, map_object.get('mapid'), map_object.get('token'))
+            logging.debug('Saving in cache')
+            RedisService.set_layer_mapid(layer, map_object.get('mapid'), map_object.get('token'))
+    except Exception as e:
+        logging.error(str(e))
+        return error(status=500, detail='Error generating tile: ' + str(e))
     try:
         url = ee.data.getTileUrl(map_object, int(x), int(y), int(z))
         storage_url = StorageService.upload_file(url, layer, map_object.get('mapid'), z, x, y)
