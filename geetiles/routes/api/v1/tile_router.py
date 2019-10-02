@@ -14,7 +14,7 @@ import ee
 tile_endpoints = Blueprint('tile_endpoints', __name__)
 
 
-@tile_endpoints.route('/<layer>/expire-cache', strict_slashes=False, methods=['DELETE'])
+@tile_endpoints.route('/<layer>/expire-cache', strict_slashes=False, methods=['POST'])
 @is_microservice_or_admin
 def expire_cache(layer):
     """Expire cache tile layer Endpoint"""
