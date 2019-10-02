@@ -14,7 +14,7 @@
 		"method": "DELETE",
 		"authenticated": true,
 		"redirect": {
-			"method": "DELETE",
+			"method": "POST",
 			"path": "/api/v1/layer/:layer/expire-cache"
 		},
 		"filters": [
