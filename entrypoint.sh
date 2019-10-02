@@ -10,7 +10,9 @@ case "$1" in
         ;;
     test)
         echo "Test"
-        
+        echo -e "$EE_PRIVATE_KEY" | base64 -d > privatekey.pem
+        echo -e "$GCLOUD_STORAGE" | base64 -d > storage.json
+        exec pytest
         ;;
     start)
         echo "Running Start"
