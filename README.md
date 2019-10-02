@@ -1,4 +1,4 @@
-# Gee tile server for Micorservices
+# Gee tile server for microservices
 
 ## Getting started
 
@@ -31,3 +31,14 @@ The API has been packed in a Python module (ps). It creates and exposes a WSGI a
 has been divided in three different layers or submodules (Routes, Services and Models).
 
 There are also some generic submodules that manage the request validations, HTTP errors and the background tasks manager.
+
+
+### Tests
+
+As this microservice relies on Google Earth Engine, tests require a valid `storage.json` or equivalent file. 
+At the time of this writing, actual tests use mock calls, so the real credential are only needed because Google's 
+library actually validates the credentials on startup. 
+
+Before you run the tests, be sure to install the necessary development libraries, using `pip install -r requirements_dev.txt`.
+
+Actual test execution is done by running the `pytest` executable on the root of the project.  
