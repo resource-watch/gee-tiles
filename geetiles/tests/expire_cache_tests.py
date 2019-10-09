@@ -131,7 +131,7 @@ def test_expire_cache_as_admin(client, mocker):
         status_code=204
     )
 
-    response = client.post('/api/v1/layer/testLayerId/expire-cache?loggedUser={}'.format(json.dumps(USERS['ADMIN'])))
+    response = client.post('/api/v1/layer/testLayerId/expire-cache', json=dict(loggedUser=USERS['ADMIN']))
     assert response.data == b''
     assert response.status_code == 200
 
@@ -141,7 +141,7 @@ def test_expire_cache_as_manager(client, mocker):
     # Deleting cache as a MANAGER-based user should return a 403
 
     response = client.post(
-        '/api/v1/layer/testLayerId/expire-cache?loggedUser={}'.format(json.dumps(USERS['MANAGER'])))
+        '/api/v1/layer/testLayerId/expire-cache', json=dict(loggedUser=USERS['MANAGER']))
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
 
@@ -150,6 +150,6 @@ def test_expire_cache_as_manager(client, mocker):
 def test_expire_cache_as_user(client, mocker):
     # Deleting cache as a USER-based user should return a 403
 
-    response = client.post('/api/v1/layer/testLayerId/expire-cache?loggedUser={}'.format(json.dumps(USERS['USER'])))
+    response = client.post('/api/v1/layer/testLayerId/expire-cache', json=dict(loggedUser=USERS['USER']))
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
