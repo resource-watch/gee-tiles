@@ -2,6 +2,11 @@
 
 ## Getting started
 
+## Dependencies
+
+Dependencies on other Microservices:
+- [Layer](https://github.com/resource-watch/layer)
+
 ### Requirements
 
 You need to install Docker in your machine if you haven't already [Docker](https://www.docker.com/)
