@@ -1,5 +1,10 @@
 # Gee tile server for microservices
 
+## Dependencies
+
+Dependencies on other Microservices:
+- [Layer](https://github.com/resource-watch/layer)
+
 ## Getting started
 
 ### Requirements
