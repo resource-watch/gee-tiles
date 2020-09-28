@@ -72,6 +72,11 @@ spec:
             secretKeyRef:
               key: EE_PRIVATE_KEY
               name: mssecrets
+        - name: EE_ACCOUNT
+          valueFrom:
+            secretKeyRef:
+              key: EE_ACCOUNT
+              name: mssecrets
         - name: REDIS_URL
           valueFrom:
             secretKeyRef:
