@@ -2,7 +2,7 @@ Flask==1.1.1
 CTRegisterMicroserviceFlask==0.3.0
 requests==2.23.0
 httmock==1.2.6
-earthengine-api==0.1.128
+earthengine-api==0.1.236
 redis==2.10.6
 google-cloud-storage==1.18.0
 urllib3==1.25.8

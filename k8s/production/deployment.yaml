@@ -1,13 +1,25 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
+  creationTimestamp: null
   labels:
     name: gee-tiles
   name: gee-tiles
 spec:
+  progressDeadlineSeconds: 2147483647
+  replicas: 1
   revisionHistoryLimit: 2
+  selector:
+    matchLabels:
+      name: gee-tiles
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
   template:
     metadata:
+      creationTimestamp: null
       labels:
         name: gee-tiles
     spec:
@@ -15,70 +27,76 @@ spec:
         nodeAffinity:
           requiredDuringSchedulingIgnoredDuringExecution:
             nodeSelectorTerms:
-              - matchExpressions:
-                  - key: type
-                    operator: In
-                    values:
-                      - apps
+            - matchExpressions:
+              - key: type
+                operator: In
+                values:
+                - apps
       containers:
-      - name: gee-tiles
+      - args:
+        - start
+        env:
+        - name: PORT
+          value: "5700"
+        - name: ENVIRONMENT
+          value: prod
+        - name: LOCAL_URL
+          value: http://gee-tiles.default.svc.cluster.local:5700
+        - name: CT_URL
+          valueFrom:
+            secretKeyRef:
+              key: CT_URL
+              name: mssecrets
+        - name: CT_TOKEN
+          valueFrom:
+            secretKeyRef:
+              key: CT_TOKEN
+              name: mssecrets
+        - name: CT_REGISTER_MODE
+          valueFrom:
+            secretKeyRef:
+              key: CT_REGISTER_MODE
+              name: mssecrets
+        - name: API_VERSION
+          valueFrom:
+            secretKeyRef:
+              key: API_VERSION
+              name: mssecrets
+        - name: GCLOUD_STORAGE
+          valueFrom:
+            secretKeyRef:
+              key: GCLOUD_BACKUPS_CREDENTIALS
+              name: mssecrets
+        - name: EE_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              key: EE_PRIVATE_KEY
+              name: mssecrets
+        - name: REDIS_URL
+          valueFrom:
+            secretKeyRef:
+              key: GEE_TILES_REDIS_URI
+              name: dbsecrets
+        - name: GOOGLE_APPLICATION_CREDENTIALS
+          value: /opt/geetiles/storage.json
         image: vizzuality/gee-tiles
         imagePullPolicy: Always
+        name: gee-tiles
+        ports:
+        - containerPort: 5700
+          protocol: TCP
         resources:
-          requests:
-            cpu: "0.25"
-            memory: "256M"
           limits:
             cpu: "1"
-            memory: "512M"
-        args:
-          - start
-        env:
-          - name: PORT
-            value: "5700"
-          - name: ENVIRONMENT
-            value: prod
-          - name: LOCAL_URL
-            value: http://gee-tiles.default.svc.cluster.local:5700
-          - name: CT_URL
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: CT_URL
-          - name: CT_TOKEN
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: CT_TOKEN
-          - name: CT_REGISTER_MODE
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: CT_REGISTER_MODE
-          - name: API_VERSION
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: API_VERSION
-          - name: GCLOUD_STORAGE
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: GCLOUD_BACKUPS_CREDENTIALS
-          - name: EE_PRIVATE_KEY
-            valueFrom:
-                secretKeyRef:
-                  name: mssecrets
-                  key: EE_PRIVATE_KEY
-          - name: REDIS_URL
-            valueFrom:
-                secretKeyRef:
-                  name: dbsecrets
-                  key: GEE_TILES_REDIS_URI
-          - name: GOOGLE_APPLICATION_CREDENTIALS
-            value: /opt/geetiles/storage.json
-
-        ports:
-          - containerPort: 5700
-
+            memory: 512M
+          requests:
+            cpu: 250m
+            memory: 256M
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
       restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+status: {}

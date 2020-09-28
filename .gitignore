@@ -90,4 +90,5 @@ ENV/
 .ropeproject
 
 /privatekey.pem
+/privatekey.json
 /storage.json

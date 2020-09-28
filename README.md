@@ -1,5 +1,8 @@
 # Gee tile server for microservices
 
+[![Build Status](https://travis-ci.org/resource-watch/gee-tiles.svg?branch=dev)](https://travis-ci.org/resource-watch/gee-tiles)
+[![Test Coverage](https://api.codeclimate.com/v1/badges/6c8dd3205ab1cb4a0073/test_coverage)](https://codeclimate.com/github/resource-watch/gee-tiles/test_coverage)
+
 ## Dependencies
 
 Dependencies on other Microservices:
