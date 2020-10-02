@@ -1,3 +1,9 @@
+## 02/10/2020
+
+- Remove MapId caching on Redis
+- Update GEE integration library to 0.1.236, update other dependencies
+- Improved logging 
+
 # 1.0.0
 
 ## 09/04/2020

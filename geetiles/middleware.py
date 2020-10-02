@@ -28,23 +28,6 @@ def get_tile_from_cache(func):
     return wrapper
 
 
-def get_map_from_cache(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        layer = kwargs['layer']
-        logging.debug('get_map_from_cache - Checking if layer {} exists in Redis cache'.format(layer))
-        kwargs["map_object"] = RedisService.check_layer_mapid(layer)
-        if kwargs["map_object"] is None:
-            logging.debug('get_map_from_cache - No layer found in Redis cache')
-        else:
-            logging.debug('get_map_from_cache - Layer {} found in Redis cache with MapID {}'.format(layer, kwargs[
-                "map_object"]['mapid']))
-
-        return func(*args, **kwargs)
-
-    return wrapper
-
-
 def is_microservice_or_admin(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
@@ -63,10 +46,9 @@ def get_layer(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:
-            if kwargs['map_object'] is None:
-                layer = kwargs['layer']
-                logging.debug("get_layer - loading layer {} from LayerService".format(layer))
-                kwargs["layer_obj"] = LayerService.get(layer)
+            layer = kwargs['layer']
+            logging.debug("get_layer - loading layer {} from LayerService".format(layer))
+            kwargs["layer_obj"] = LayerService.get(layer)
             return func(*args, **kwargs)
         except LayerNotFound as e:
             logging.error("get_layer - LayerNotFound - {}".format(e.message))

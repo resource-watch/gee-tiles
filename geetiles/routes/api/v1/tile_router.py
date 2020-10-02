@@ -5,7 +5,7 @@ import os
 import ee
 from flask import Blueprint, redirect
 
-from geetiles.middleware import get_map_from_cache, get_layer, get_tile_from_cache, is_microservice_or_admin
+from geetiles.middleware import get_layer, get_tile_from_cache, is_microservice_or_admin
 from geetiles.routes.api import error
 from geetiles.services.redis_service import RedisService
 from geetiles.services.storage_service import StorageService
@@ -28,40 +28,36 @@ def expire_cache(layer):
 
 @tile_endpoints.route('/<layer>/tile/gee/<z>/<x>/<y>', strict_slashes=False, methods=['GET'])
 @get_tile_from_cache
-@get_map_from_cache
 @get_layer
 def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
     """Get tile Endpoint"""
-    logging.info('[ROUTER]: Get tile')
+    logging.info('[ROUTER]: Getting tile for layer {} and map_object {}'.format(layer, map_object))
     logging.info(map_object)
     try:
-        if map_object is None:
-            logging.debug('Generating mapid')
-            layer_config = layer_obj.get('layerConfig')
-            style_type = layer_config.get('body').get('styleType')
-            if 'isImageCollection' not in layer_config or not layer_config.get('isImageCollection'):
-                image = ee.Image(layer_config.get('assetId'))
+        layer_config = layer_obj.get('layerConfig')
+        style_type = layer_config.get('body').get('styleType')
+        if 'isImageCollection' not in layer_config or not layer_config.get('isImageCollection'):
+            image = ee.Image(layer_config.get('assetId'))
+        else:
+            position = layer_config.get('position')
+            image_col = ee.ImageCollection(layer_config.get('assetId'))
+            if 'filterDates' in layer_config:
+                dates = layer_config.get('filterDates')
+                image_col = image_col.filterDate(dates[0], dates[1])
+            if position == 'first':
+                logging.info('Obtaining first')
+                image = ee.Image(image_col.sort('system:time_start', True).first())
             else:
-                position = layer_config.get('position')
-                image_col = ee.ImageCollection(layer_config.get('assetId'))
-                if 'filterDates' in layer_config:
-                    dates = layer_config.get('filterDates')
-                    image_col = image_col.filterDate(dates[0], dates[1])
-                if position == 'first':
-                    logging.info('Obtaining first')
-                    image = ee.Image(image_col.sort('system:time_start', True).first())
-                else:
-                    logging.info('Obtaining last')
-                    image = ee.Image(image_col.sort('system:time_start', False).first())
+                logging.info('Obtaining last')
+                image = ee.Image(image_col.sort('system:time_start', False).first())
 
-            if style_type == 'sld':
-                style = layer_config.get('body').get('sldValue')
-                map_object = image.sldStyle(style).getMapId()
-            else:
-                map_object = image.getMapId(layer_config.get('body'))
+        if style_type == 'sld':
+            style = layer_config.get('body').get('sldValue')
+            map_object = image.sldStyle(style).getMapId()
+        else:
+            map_object = image.getMapId(layer_config.get('body'))
 
-            logging.debug('Saving in cache')
-            RedisService.set_layer_mapid(layer, map_object.get('mapid'), map_object.get('token'))
+        logging.debug('get_tile - Saving in cache')
     except Exception as e:
         logging.error(str(e))
         return error(status=500, detail='Error generating tile: ' + str(e))
