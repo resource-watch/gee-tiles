@@ -5,7 +5,7 @@ import os
 import ee
 from flask import Blueprint, redirect
 
-from geetiles.middleware import mapid_exists, get_layer, get_tile_from_cache, is_microservice_or_admin
+from geetiles.middleware import get_map_from_cache, get_layer, get_tile_from_cache, is_microservice_or_admin
 from geetiles.routes.api import error
 from geetiles.services.redis_service import RedisService
 from geetiles.services.storage_service import StorageService
@@ -28,7 +28,7 @@ def expire_cache(layer):
 
 @tile_endpoints.route('/<layer>/tile/gee/<z>/<x>/<y>', strict_slashes=False, methods=['GET'])
 @get_tile_from_cache
-@mapid_exists
+@get_map_from_cache
 @get_layer
 def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
     """Get tile Endpoint"""

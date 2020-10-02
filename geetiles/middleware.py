@@ -16,8 +16,8 @@ logging.basicConfig(level=LOGGER_LEVEL)
 def get_tile_from_cache(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
+        logging.debug('get_tile_from_cache - requesting {} from Redis cache'.format(request.path))
         url = RedisService.get(request.path)
-        logging.debug('get_tile_from_cache - url found: {}'.format(url))
         if url is None:
             logging.debug('get_tile_from_cache - no cached tile found, loading from GEE')
             return func(*args, **kwargs)
@@ -28,12 +28,18 @@ def get_tile_from_cache(func):
     return wrapper
 
 
-def mapid_exists(func):
+def get_map_from_cache(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         layer = kwargs['layer']
-        logging.debug('Checking if exist in cache layer ' + layer)
+        logging.debug('get_map_from_cache - Checking if layer {} exists in Redis cache'.format(layer))
         kwargs["map_object"] = RedisService.check_layer_mapid(layer)
+        if kwargs["map_object"] is None:
+            logging.debug('get_map_from_cache - No layer found in Redis cache')
+        else:
+            logging.debug('get_map_from_cache - Layer {} found in Redis cache with MapID {}'.format(layer, kwargs[
+                "map_object"]['mapid']))
+
         return func(*args, **kwargs)
 
     return wrapper
@@ -59,12 +65,14 @@ def get_layer(func):
         try:
             if kwargs['map_object'] is None:
                 layer = kwargs['layer']
-                logging.debug('Getting layer ' + layer)
+                logging.debug("get_layer - loading layer {} from LayerService".format(layer))
                 kwargs["layer_obj"] = LayerService.get(layer)
             return func(*args, **kwargs)
         except LayerNotFound as e:
+            logging.error("get_layer - LayerNotFound - {}".format(e.message))
             return error(status=404, detail=e.message)
         except Exception as e:
+            logging.error("get_layer - Exception - {}".format(e.message))
             return error(detail='Generic error')
 
     return wrapper
