@@ -1,8 +1,8 @@
 """-"""
 
 import os
-from geetiles.utils.files import BASE_DIR
 
+from geetiles.utils.files import BASE_DIR
 
 SETTINGS = {
     'logging': {

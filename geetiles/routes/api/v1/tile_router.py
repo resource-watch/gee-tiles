@@ -1,15 +1,17 @@
 """API ROUTER"""
 
 import logging
-import json
+import os
+import ee
+from flask import Blueprint, redirect
 
-from flask import jsonify, Blueprint, redirect, request
+from geetiles.middleware import mapid_exists, get_layer, get_tile_from_cache, is_microservice_or_admin
 from geetiles.routes.api import error
-from geetiles.middleware import exist_mapid, get_layer, exist_tile, is_microservice_or_admin
 from geetiles.services.redis_service import RedisService
 from geetiles.services.storage_service import StorageService
-import ee
 
+LOGGER_LEVEL = os.environ.get('LOGGER_LEVEL', 'WARN').upper()
+logging.basicConfig(level=LOGGER_LEVEL)
 
 tile_endpoints = Blueprint('tile_endpoints', __name__)
 
@@ -25,8 +27,8 @@ def expire_cache(layer):
 
 
 @tile_endpoints.route('/<layer>/tile/gee/<z>/<x>/<y>', strict_slashes=False, methods=['GET'])
-@exist_tile
-@exist_mapid
+@get_tile_from_cache
+@mapid_exists
 @get_layer
 def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
     """Get tile Endpoint"""
@@ -37,7 +39,6 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
             logging.debug('Generating mapid')
             layer_config = layer_obj.get('layerConfig')
             style_type = layer_config.get('body').get('styleType')
-            image = None
             if 'isImageCollection' not in layer_config or not layer_config.get('isImageCollection'):
                 image = ee.Image(layer_config.get('assetId'))
             else:
@@ -52,7 +53,7 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
                 else:
                     logging.info('Obtaining last')
                     image = ee.Image(image_col.sort('system:time_start', False).first())
-            
+
             if style_type == 'sld':
                 style = layer_config.get('body').get('sldValue')
                 map_object = image.sldStyle(style).getMapId()

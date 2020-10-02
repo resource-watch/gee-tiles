@@ -1,4 +1,5 @@
 import logging
+import os
 from functools import wraps
 
 from flask import request, redirect
@@ -8,24 +9,26 @@ from geetiles.routes.api import error
 from geetiles.services.layer_service import LayerService
 from geetiles.services.redis_service import RedisService
 
+LOGGER_LEVEL = os.environ.get('LOGGER_LEVEL', 'WARN').upper()
+logging.basicConfig(level=LOGGER_LEVEL)
 
-def exist_tile(func):
-    """Get geodata"""
 
+def get_tile_from_cache(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         url = RedisService.get(request.path)
+        logging.debug('get_tile_from_cache - url found: {}'.format(url))
         if url is None:
+            logging.debug('get_tile_from_cache - no cached tile found, loading from GEE')
             return func(*args, **kwargs)
         else:
+            logging.debug('get_tile_from_cache - tile found in redis, returning cached value')
             return redirect(url)
 
     return wrapper
 
 
-def exist_mapid(func):
-    """Get geodata"""
-
+def mapid_exists(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         layer = kwargs['layer']
@@ -37,8 +40,6 @@ def exist_mapid(func):
 
 
 def is_microservice_or_admin(func):
-    """Get geodata"""
-
     @wraps(func)
     def wrapper(*args, **kwargs):
         logging.debug("Checking microservice user")
@@ -53,8 +54,6 @@ def is_microservice_or_admin(func):
 
 
 def get_layer(func):
-    """Get geodata"""
-
     @wraps(func)
     def wrapper(*args, **kwargs):
         try:

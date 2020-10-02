@@ -1,12 +1,11 @@
 """ Storage service """
 
-
+import logging
 import os
 import uuid
-import logging
+from urllib.request import urlretrieve
 
 from flask import request
-from urllib.request import urlretrieve
 from google.cloud import storage
 
 from geetiles.services.redis_service import RedisService
@@ -17,9 +16,9 @@ client = storage.Client()
 class StorageService(object):
 
     @staticmethod
-    def delete_folder(layer): 
+    def delete_folder(layer):
         bucket = client.get_bucket('gee-tiles')
-        #blob = bucket.blob(layer+"/0/0/0/tile.png")
+        # blob = bucket.blob(layer+"/0/0/0/tile.png")
         list = bucket.list_blobs(prefix=layer)
         for blob in list:
             logging.debug(blob)

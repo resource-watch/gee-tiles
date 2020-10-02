@@ -1,13 +1,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  creationTimestamp: null
   labels:
     name: gee-tiles
   name: gee-tiles
 spec:
   progressDeadlineSeconds: 2147483647
-  replicas: 1
   revisionHistoryLimit: 0
   selector:
     matchLabels:

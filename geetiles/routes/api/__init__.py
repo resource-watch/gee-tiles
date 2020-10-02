@@ -1,7 +1,5 @@
+from flask import jsonify
 
-import datetime
-
-from flask import jsonify, request
 
 # GENERIC Error
 
