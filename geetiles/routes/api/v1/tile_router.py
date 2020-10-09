@@ -20,9 +20,12 @@ tile_endpoints = Blueprint('tile_endpoints', __name__)
 @is_microservice
 def expire_cache(layer):
     """Expire cache tile layer Endpoint"""
-    logging.info('[ROUTER]: Expire cache tile')
+    logging.info('[tile_router - expire_cache]: Expire cache tile')
+    logging.info('[tile_router - expire_cache]: Clearing Redis data')
     RedisService.expire_layer(layer)
+    logging.info('[tile_router - expire_cache]: Redis data cleared, clearing Google Storage data')
     StorageService.delete_folder(layer)
+    logging.info('[tile_router - expire_cache]: Tile cache cleared')
     return "", 200
 
 
