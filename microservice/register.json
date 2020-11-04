@@ -1,38 +1,28 @@
 {
-	"name": "gee-tiles",
-	"cache": ["gee-tiles"],
-	"uncache": ["gee-tiles"],
-	"endpoints": [{
-		"path": "/v1/layer/:layer/tile/gee/:z/:x/:y",
-		"method": "GET",
-		"redirect": {
-			"method": "GET",
-			"path": "/api/v1/layer/:layer/tile/gee/:z/:x/:y"
-		}
-	}, {
-		"path": "/v1/layer/:layer/expire-cache",
-		"method": "DELETE",
-		"authenticated": true,
-		"redirect": {
-			"method": "POST",
-			"path": "/api/v1/layer/:layer/expire-cache"
-		},
-		"filters": [
-            {
-                "name": "layer",
-                "path": "/v1/layer/:layer",
-                "method": "GET",
-                "params": {
-                    "layer": "layer"
-                },
-                "compare": {
-                    "data": {
-                        "attributes": {
-                            "provider": "gee"
-                        }
-                    }
-                }
-            }
-        ]
-	}]
+  "name": "gee-tiles",
+  "cache": [
+    "gee-tiles"
+  ],
+  "uncache": [
+    "gee-tiles"
+  ],
+  "endpoints": [
+    {
+      "path": "/v1/layer/:layer/tile/gee/:z/:x/:y",
+      "method": "GET",
+      "redirect": {
+        "method": "GET",
+        "path": "/api/v1/layer/:layer/tile/gee/:z/:x/:y"
+      }
+    },
+    {
+      "path": "/v1/layer/gee/:layer/expire-cache",
+      "method": "DELETE",
+      "authenticated": true,
+      "redirect": {
+        "method": "POST",
+        "path": "/api/v1/layer/gee/:layer/expire-cache"
+      }
+    }
+  ]
 }

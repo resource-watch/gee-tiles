@@ -1,3 +1,7 @@
+## 05/11/2020
+
+- Remove filter dependency for `expire-cache` endpoint
+
 ## 02/10/2020
 
 - Remove MapId caching on Redis

@@ -16,7 +16,7 @@ logging.basicConfig(level=LOGGER_LEVEL)
 tile_endpoints = Blueprint('tile_endpoints', __name__)
 
 
-@tile_endpoints.route('/<layer>/expire-cache', strict_slashes=False, methods=['POST'])
+@tile_endpoints.route('/gee/<layer>/expire-cache', strict_slashes=False, methods=['POST'])
 @is_microservice_or_admin
 def expire_cache(layer):
     """Expire cache tile layer Endpoint"""
