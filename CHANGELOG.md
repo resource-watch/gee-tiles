@@ -1,5 +1,6 @@
 ## 05/11/2020
 
+- `expire-cache` endpoint is now only accessible by microservices
 - Remove filter dependency for `expire-cache` endpoint
 
 ## 02/10/2020

@@ -28,13 +28,13 @@ def get_tile_from_cache(func):
     return wrapper
 
 
-def is_microservice_or_admin(func):
+def is_microservice(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         logging.debug("Checking microservice user")
         logged_user = request.json.get("loggedUser", None)
-        if (logged_user.get("id") == "microservice") or (logged_user.get("role") == "ADMIN"):
-            logging.debug("is microservice or admin")
+        if logged_user.get("id") == "microservice":
+            logging.debug("is microservice")
             return func(*args, **kwargs)
         else:
             return error(status=403, detail="Not authorized")

@@ -5,7 +5,7 @@ import os
 import ee
 from flask import Blueprint, redirect
 
-from geetiles.middleware import get_layer, get_tile_from_cache, is_microservice_or_admin
+from geetiles.middleware import get_layer, get_tile_from_cache, is_microservice
 from geetiles.routes.api import error
 from geetiles.services.redis_service import RedisService
 from geetiles.services.storage_service import StorageService
@@ -17,7 +17,7 @@ tile_endpoints = Blueprint('tile_endpoints', __name__)
 
 
 @tile_endpoints.route('/gee/<layer>/expire-cache', strict_slashes=False, methods=['POST'])
-@is_microservice_or_admin
+@is_microservice
 def expire_cache(layer):
     """Expire cache tile layer Endpoint"""
     logging.info('[ROUTER]: Expire cache tile')
