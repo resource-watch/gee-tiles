@@ -1,6 +1,6 @@
 """ Layer service """
 
-from CTRegisterMicroserviceFlask import request_to_microservice
+from RWAPIMicroservicePython import request_to_microservice
 
 from geetiles.errors import LayerNotFound
 

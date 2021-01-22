@@ -1,5 +1,6 @@
 import logging
 import os
+import json
 from functools import wraps
 
 from flask import request, redirect
@@ -32,7 +33,7 @@ def is_microservice(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         logging.debug("Checking microservice user")
-        logged_user = request.json.get("loggedUser", None)
+        logged_user = json.loads(request.args.get("loggedUser", None))
         if logged_user.get("id") == "microservice":
             logging.debug("is microservice")
             return func(*args, **kwargs)
