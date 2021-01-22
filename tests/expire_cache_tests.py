@@ -1,4 +1,5 @@
 import json
+import os
 
 import pytest
 import requests_mock
@@ -74,26 +75,35 @@ def client():
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_admin(client, mocker):
     # Deleting cache as a ADMIN-based user should return a 403
+    get_user_data_calls = mocker.get(os.getenv('CT_URL') + '/auth/user/me', status_code=200, json=USERS['ADMIN'])
 
-    response = client.post('/api/v1/layer/gee/testLayerId/expire-cache', json=dict(loggedUser=USERS['ADMIN']))
+    response = client.post('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
+    assert get_user_data_calls.called
+    assert get_user_data_calls.call_count == 1
 
 
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_manager(client, mocker):
     # Deleting cache as a MANAGER-based user should return a 403
+    get_user_data_calls = mocker.get(os.getenv('CT_URL') + '/auth/user/me', status_code=200, json=USERS['MANAGER'])
 
     response = client.post(
-        '/api/v1/layer/gee/testLayerId/expire-cache', json=dict(loggedUser=USERS['MANAGER']))
+        '/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
+    assert get_user_data_calls.called
+    assert get_user_data_calls.call_count == 1
 
 
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_user(client, mocker):
     # Deleting cache as a USER-based user should return a 403
+    get_user_data_calls = mocker.get(os.getenv('CT_URL') + '/auth/user/me', status_code=200, json=USERS['USER'])
 
-    response = client.post('/api/v1/layer/gee/testLayerId/expire-cache', json=dict(loggedUser=USERS['USER']))
+    response = client.post('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
+    assert get_user_data_calls.called
+    assert get_user_data_calls.call_count == 1
