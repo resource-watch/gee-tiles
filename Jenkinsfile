@@ -5,7 +5,7 @@ node {
   // Variables
   def tokens = "${env.JOB_NAME}".tokenize('/')
   def appName = tokens[0]
-  def dockerUsername = "${DOCKER_USERNAME}"
+  def dockerUsername = "${DOCKER_WRI_USERNAME}"
   def imageTag = "${dockerUsername}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
 
   currentBuild.result = "SUCCESS"
@@ -22,13 +22,13 @@ node {
 
     stage ('Run Tests') {
       sh('docker-compose -H :2375 -f docker-compose-test.yml build')
-      sh('docker-compose -H :2375 -f docker-compose-test.yml run -e EE_ACCOUNT=${EE_ACCOUNT} -e EE_PRIVATE_KEY=${EE_PRIVATE_KEY} -e GCLOUD_STORAGE=${GOOGLE_APPLICATION_CREDENTIALS} --rm test')
+      sh('docker-compose -H :2375 -f docker-compose-test.yml run --rm test')
       sh('docker-compose -H :2375 -f docker-compose-test.yml stop')
     }
 
     stage('Push Docker') {
-      withCredentials([usernamePassword(credentialsId: 'Vizzuality Docker Hub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
-        sh("docker -H :2375 login -u ${DOCKER_HUB_USERNAME} -p ${DOCKER_HUB_PASSWORD}")
+      withCredentials([usernamePassword(credentialsId: 'WRI Docker Hub', usernameVariable: 'DOCKER_HUB_USERNAME', passwordVariable: 'DOCKER_HUB_PASSWORD')]) {
+        sh("docker -H :2375 login -u ${DOCKER_HUB_USERNAME} -p '${DOCKER_HUB_PASSWORD}'")
         sh("docker -H :2375 push ${imageTag}")
         sh("docker -H :2375 push ${dockerUsername}/${appName}:latest")
         sh("docker -H :2375 rmi ${imageTag}")
@@ -40,13 +40,12 @@ node {
 
         // Roll out to dev
         case "dev":
-          sh("echo Deploying to STAGING cluster")
+          sh("echo Deploying to DEV cluster")
           sh("kubectl config use-context ${KUBECTL_CONTEXT_PREFIX}_${CLOUD_PROJECT_NAME}_${CLOUD_PROJECT_ZONE}_${KUBE_DEV_CLUSTER}")
           sh("kubectl apply -f k8s/services/")
           sh("kubectl apply -f k8s/dev/")
           sh("kubectl set image deployment ${appName} ${appName}=${imageTag} --record")
           break
-
 
         // Roll out to staging
         case "staging":
