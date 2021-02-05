@@ -84,7 +84,7 @@ spec:
               name: dbsecrets
         - name: GOOGLE_APPLICATION_CREDENTIALS
           value: /opt/geetiles/storage.json
-        image: vizzuality/gee-tiles
+        image: gfwdockerhub/gee-tiles
         imagePullPolicy: Always
         name: gee-tiles
         ports:
