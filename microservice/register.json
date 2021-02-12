@@ -18,7 +18,6 @@
     {
       "path": "/v1/layer/gee/:layer/expire-cache",
       "method": "DELETE",
-      "authenticated": true,
       "redirect": {
         "method": "POST",
         "path": "/api/v1/layer/gee/:layer/expire-cache"
