@@ -1,5 +1,5 @@
-Flask==1.1.2
-RWAPIMicroservicePython==0.2.0
+Flask==1.1.1
+RWAPIMicroservicePython==0.3.0
 requests==2.23.0
 earthengine-api==0.1.236
 redis==2.10.6
