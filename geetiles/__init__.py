@@ -19,13 +19,16 @@ logging.basicConfig(
 
 )
 
-EE_ACCOUNT = os.environ['EE_ACCOUNT']
-EE_PRIVATE_KEY_FILE = 'privatekey.json'
-
-gee_credentials = ee.ServiceAccountCredentials(EE_ACCOUNT, EE_PRIVATE_KEY_FILE)
-
-ee.Initialize(gee_credentials)
-ee.data.setDeadline(60000)
+gee = SETTINGS.get('gee')
+ee_user = gee.get('service_account')
+private_key_file = gee.get('privatekey_file')
+if private_key_file:
+    logging.info(f'Initializing EE with privatekey.json credential file: {ee_user} | {private_key_file}')
+    credentials = ee.ServiceAccountCredentials(ee_user, private_key_file)
+    ee.Initialize(credentials)
+    ee.data.setDeadline(60000)
+else:
+    raise ValueError("privatekey.json file not found. Unable to authenticate EE.")
 
 # Flask App
 app = Flask(__name__)
