@@ -1,3 +1,7 @@
+## 26/03/2021
+
+- Modify expire cache method HTTP verb to match public API method signature (POST -> DELETE).
+
 ## 06/03/2021
 
 - Update `RWAPIMicroservicePython` to fix issue with requests to other microservices.

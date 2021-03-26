@@ -20,7 +20,7 @@
       "method": "DELETE",
       "authenticated": true,
       "redirect": {
-        "method": "POST",
+        "method": "DELETE",
         "path": "/api/v1/layer/gee/:layer/expire-cache"
       }
     }
