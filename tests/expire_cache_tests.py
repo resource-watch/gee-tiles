@@ -77,7 +77,7 @@ def test_expire_cache_as_admin(client, mocker):
     # Deleting cache as a ADMIN-based user should return a 403
     get_user_data_calls = mocker.get(os.getenv('CT_URL') + '/auth/user/me', status_code=200, json=USERS['ADMIN'])
 
-    response = client.post('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
     assert get_user_data_calls.called
@@ -89,7 +89,7 @@ def test_expire_cache_as_manager(client, mocker):
     # Deleting cache as a MANAGER-based user should return a 403
     get_user_data_calls = mocker.get(os.getenv('CT_URL') + '/auth/user/me', status_code=200, json=USERS['MANAGER'])
 
-    response = client.post(
+    response = client.delete(
         '/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
@@ -102,7 +102,7 @@ def test_expire_cache_as_user(client, mocker):
     # Deleting cache as a USER-based user should return a 403
     get_user_data_calls = mocker.get(os.getenv('CT_URL') + '/auth/user/me', status_code=200, json=USERS['USER'])
 
-    response = client.post('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
     assert get_user_data_calls.called
