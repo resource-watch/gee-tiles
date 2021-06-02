@@ -2,7 +2,7 @@
 
 import os
 
-from geetiles.config import base, staging, prod
+from geetiles.config import base, staging, prod, test
 
 SETTINGS = base.SETTINGS
 
@@ -11,3 +11,6 @@ if os.getenv('ENVIRONMENT') == 'staging':
 
 if os.getenv('ENVIRONMENT') == 'prod':
     SETTINGS.update(prod.SETTINGS)
+
+if os.getenv('ENVIRONMENT') == 'test':
+    SETTINGS.update(test.SETTINGS)

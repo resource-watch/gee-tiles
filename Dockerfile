@@ -1,4 +1,4 @@
-FROM python:3.6-alpine
+FROM python:3.6.11-alpine
 MAINTAINER info@vizzuality.com
 
 ENV NAME geetiles
@@ -11,10 +11,10 @@ RUN apk update && apk upgrade && \
 RUN addgroup $USER && adduser -s /bin/bash -D -G $USER $USER
 
 RUN pip install --upgrade pip
-RUN pip install virtualenv gunicorn gevent
+RUN pip install gunicorn gevent
 
 RUN mkdir -p /opt/$NAME
-RUN cd /opt/$NAME && virtualenv venv && source venv/bin/activate
+RUN cd /opt/$NAME
 COPY tox.ini /opt/$NAME/tox.ini
 COPY requirements.txt /opt/$NAME/requirements.txt
 COPY requirements_dev.txt /opt/$NAME/requirements_dev.txt

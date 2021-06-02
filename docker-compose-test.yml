@@ -13,10 +13,11 @@ services:
       API_VERSION: v1
       REDIS_URL: redis://redis:6379
       GOOGLE_APPLICATION_CREDENTIALS: /opt/geetiles/storage.json
+      ENVIRONMENT: test
     command: test
     depends_on:
       - redis
 
   redis:
-    image: redis
+    image: redis:5.0.8-buster
     restart: always

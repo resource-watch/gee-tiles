@@ -27,7 +27,7 @@ if private_key_file:
     credentials = ee.ServiceAccountCredentials(ee_user, private_key_file)
     ee.Initialize(credentials)
     ee.data.setDeadline(60000)
-else:
+elif os.getenv('ENVIRONMENT') != 'test':
     raise ValueError("privatekey.json file not found. Unable to authenticate EE.")
 
 # Flask App

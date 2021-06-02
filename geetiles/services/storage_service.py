@@ -2,23 +2,21 @@
 
 import logging
 import os
-import uuid
+from uuid import uuid4 as uuid
 from urllib.request import urlretrieve
 
 from flask import request
-from google.cloud import storage
-
+from google.cloud.storage import Client as storageClient
 from geetiles.services.redis_service import RedisService
-
-client = storage.Client()
 
 
 class StorageService(object):
 
     @staticmethod
     def delete_folder(layer):
-        bucket = client.get_bucket('gee-tiles')
-        # blob = bucket.blob(layer+"/0/0/0/tile.png")
+        storage_client = storageClient()
+        bucket = storage_client.get_bucket('gee-tiles')
+
         list = bucket.list_blobs(prefix=layer)
         for blob in list:
             logging.debug(blob)
@@ -27,10 +25,11 @@ class StorageService(object):
 
     @staticmethod
     def upload_file(url, layer, map_id, z, x, y):
-        name = str(uuid.uuid4()) + '.png'
+        name = str(uuid()) + '.png'
         urlretrieve(url, name)
 
-        bucket = client.get_bucket('gee-tiles')
+        storage_client = storageClient()
+        bucket = storage_client.get_bucket('gee-tiles')
         blob = bucket.blob(layer + '/' + z + '/' + x + '/' + y + '/' + 'tile_' + map_id + '.png')
         with open(name, 'rb') as my_file:
             blob.upload_from_file(my_file)

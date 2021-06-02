@@ -1,3 +1,7 @@
+## 02/06/2021
+
+- Fix issue with `Werkzeug` version differences causing redirecting issues when loading from Redis cache.  
+
 ## 31/05/2021
 
 - Update `RWAPIMicroservicePython` to add CORS support.
