@@ -19,7 +19,7 @@ class LayerService(object):
     @staticmethod
     def get(layer):
         config = {
-            'uri': '/layer/' + layer,
+            'uri': '/v1/layer/' + layer,
             'method': 'GET'
         }
         return LayerService.execute(config)

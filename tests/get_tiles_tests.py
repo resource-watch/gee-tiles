@@ -115,7 +115,7 @@ def test_get_tile_cold_cache(storageClient, uuid, Image, getTileUrl, client, moc
     blob().public_url = 'https://my-tile.server/1234/4/7/6.png'
 
     # Mock request to layer MS
-    get_layer = mocker.get(os.getenv('CT_URL') + '/v1/layer/1234', status_code=200, json=LAYER)
+    get_layer = mocker.get(os.getenv('GATEWAY_URL') + '/v1/layer/1234', status_code=200, json=LAYER)
 
     # Clean Redis cache
     RedisService.expire_layer('1234')

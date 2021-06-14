@@ -1,3 +1,7 @@
+## 14/06/2021
+
+- Update `RWAPIMicroservicePython` to remove CT support.
+
 ## 02/06/2021
 
 - Fix issue with `Werkzeug` version differences causing redirecting issues when loading from Redis cache.  
