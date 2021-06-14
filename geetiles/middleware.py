@@ -33,7 +33,7 @@ def is_microservice(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         logging.debug("Checking microservice user")
-        logged_user = json.loads(request.args.get("loggedUser", None))
+        logged_user = json.loads(request.args.get("loggedUser", '{}'))
         if logged_user.get("id") == "microservice":
             logging.debug("is microservice")
             return func(*args, **kwargs)

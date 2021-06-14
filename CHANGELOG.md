@@ -1,5 +1,6 @@
 ## 14/06/2021
 
+- Properly handle anon requests when MS token is expected.
 - Update `RWAPIMicroservicePython` to remove CT support.
 
 ## 02/06/2021

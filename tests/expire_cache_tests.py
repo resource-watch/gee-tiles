@@ -106,3 +106,14 @@ def test_expire_cache_as_user(client, mocker):
     assert response.status_code == 403
     assert get_user_data_calls.called
     assert get_user_data_calls.call_count == 1
+
+
+@requests_mock.mock(kw='mocker')
+def test_expire_cache_as_anon(client, mocker):
+    # Deleting cache as a USER-based user should return a 403
+    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['USER'])
+
+    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache')
+    assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
+    assert response.status_code == 403
+    assert get_user_data_calls.call_count == 0
