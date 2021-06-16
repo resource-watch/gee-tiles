@@ -39,7 +39,7 @@ spec:
         - name: ENVIRONMENT
           value: prod
         - name: LOGGER_LEVEL
-          value: DEBUG
+          value: INFO
         - name: GATEWAY_URL
           valueFrom:
             secretKeyRef:
