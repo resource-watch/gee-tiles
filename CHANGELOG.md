@@ -1,3 +1,8 @@
+## 16/06/2021
+
+- Additional tests on `expire-cache` 
+- Update redis integration lib
+
 ## 14/06/2021
 
 - Properly handle anon requests when MS token is expected.
