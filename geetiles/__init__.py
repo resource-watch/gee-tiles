@@ -36,9 +36,7 @@ app = Flask(__name__)
 # Routing
 app.register_blueprint(tile_endpoints, url_prefix='/api/v1/layer')
 
-# CT
-info = load_config_json('register')
-swagger = load_config_json('swagger')
+# Integration with the RW API ecosystem
 RWAPIMicroservicePython.register(
     app=app,
     gateway_url=os.getenv('GATEWAY_URL'),

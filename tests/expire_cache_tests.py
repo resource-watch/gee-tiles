@@ -4,6 +4,8 @@ import os
 import pytest
 import requests_mock
 import geetiles
+from unittest.mock import patch, MagicMock
+from geetiles.services.redis_service import RedisService
 
 USERS = {
     "ADMIN": {
@@ -58,7 +60,9 @@ USERS = {
             ]
         }
     },
-
+    "MICROSERVICE": {
+        "id": 'microservice'
+    },
 }
 
 
@@ -69,6 +73,30 @@ def client():
     client = app.test_client()
 
     yield client
+
+
+@patch("geetiles.services.storage_service.storageClient")
+@requests_mock.mock(kw='mocker')
+def test_expire_cache_as_microservice(storageClient, client, mocker):
+    # Deleting cache as a MICROSERVICE-based user should return ...
+
+    RedisService.set('/api/v1/layer/testLayerId/tile/gee/11/1051/726', b'https://my-tile.server/1234/4/7/6.png')
+
+    bucket = storageClient().get_bucket
+    list_blobs = bucket().list_blobs
+    blob_from_list = MagicMock()
+    list_blobs.return_value = [blob_from_list]
+
+    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['MICROSERVICE'])
+
+    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+    assert response.data == b''
+    assert response.status_code == 200
+    assert get_user_data_calls.called
+    assert get_user_data_calls.call_count == 1
+    bucket.assert_called_with('gee-tiles')
+    list_blobs.assert_called_with(prefix='testLayerId')
+    blob_from_list.delete.assert_called()
 
 
 @requests_mock.mock(kw='mocker')
