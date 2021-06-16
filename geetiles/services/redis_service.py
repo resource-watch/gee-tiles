@@ -26,6 +26,6 @@ class RedisService(object):
 
     @staticmethod
     def expire_layer(layer):
-        for key in redis_connection.scan_iter("*" + layer + "*"):
+        for key in redis_connection.scan_iter("*" + layer + "*", count=5000000):
             logging.debug('[RedisService - expire_layer]: Deleting key {}'.format(key))
             redis_connection.delete(key)
