@@ -22,7 +22,7 @@ class RedisService(object):
 
     @staticmethod
     def set(key, value):
-        return redis_connection.set(key, value)
+        return redis_connection.set(key, value, ex=2592000)
 
     @staticmethod
     def expire_layer(layer):

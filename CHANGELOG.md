@@ -1,5 +1,6 @@
 ## 16/06/2021
 
+- Add one month TTL to redis cache entries
 - Additional tests on `expire-cache` 
 - Update redis integration lib
 
