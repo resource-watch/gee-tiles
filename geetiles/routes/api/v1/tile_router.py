@@ -50,6 +50,9 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
             if position == 'first':
                 logging.info('Obtaining first')
                 image = ee.Image(image_col.sort('system:time_start', True).first())
+            elif position == 'mosaic':
+                logging.info('Mosaicing')
+                image = image_col.mosaic()
             else:
                 logging.info('Obtaining last')
                 image = ee.Image(image_col.sort('system:time_start', False).first())
