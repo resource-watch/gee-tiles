@@ -1,3 +1,9 @@
+## 16/06/2021
+
+- Add one month TTL to redis cache entries
+- Additional tests on `expire-cache` 
+- Update redis integration lib
+
 ## 14/06/2021
 
 - Properly handle anon requests when MS token is expected.
