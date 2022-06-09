@@ -39,6 +39,8 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
     try:
         layer_config = layer_obj.get('layerConfig')
         style_type = layer_config.get('body').get('styleType')
+        clip_region_id = layer_config.get('body').get('clipRegionId')
+
         if 'isImageCollection' not in layer_config or not layer_config.get('isImageCollection'):
             image = ee.Image(layer_config.get('assetId'))
         else:
@@ -56,6 +58,10 @@ def get_tile(layer, z, x, y, map_object=None, layer_obj=None):
             else:
                 logging.info('Obtaining last')
                 image = ee.Image(image_col.sort('system:time_start', False).first())
+
+        if clip_region_id:
+            clip_region = ee.FeatureCollection(clip_region_id)
+            image = image.clipToCollection(clip_region)
 
         if style_type == 'sld':
             style = layer_config.get('body').get('sldValue')
