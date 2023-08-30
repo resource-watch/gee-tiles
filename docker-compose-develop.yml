@@ -15,6 +15,9 @@ services:
       GCLOUD_STORAGE: ${GCLOUD_STORAGE}
       REDIS_URL: redis://redis:6379
       GOOGLE_APPLICATION_CREDENTIALS: /opt/geetiles/storage.json
+      AWS_REGION: "us-east-1"
+      REQUIRE_API_KEY: "True"
+      AWS_CLOUD_WATCH_LOGGING_ENABLED: "False"
     command: develop
     volumes:
       - ./geetiles:/opt/geetiles/geetiles

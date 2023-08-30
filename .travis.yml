@@ -15,7 +15,8 @@ env:
     - MICROSERVICE_TOKEN=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6Im1pY3Jvc2VydmljZSIsImNyZWF0ZWRBdCI6IjIwMTYtMDktMTQifQ.IRCIRm1nfIQTfda_Wb6Pg-341zhV8soAgzw7dd5HxxQ
     - REDIS_URL=redis://localhost:6379
     - GOOGLE_APPLICATION_CREDENTIALS=${TRAVIS_BUILD_DIR}/storage.json
-
+    - AWS_REGION=us-east-1
+    - REQUIRE_API_KEY=True
 before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
