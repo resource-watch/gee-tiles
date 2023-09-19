@@ -2,10 +2,13 @@
 
 import logging
 import os
+import collections
 
 import ee
 
 from geetiles.config import SETTINGS
+
+collections.Callable = collections.abc.Callable
 
 logging.basicConfig(
     level=SETTINGS.get("logging", {}).get("level"),
