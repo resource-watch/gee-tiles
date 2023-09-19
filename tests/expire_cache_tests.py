@@ -1,79 +1,12 @@
 import json
 import os
 
-import pytest
 import requests_mock
-import geetiles
 from unittest.mock import patch, MagicMock
+from RWAPIMicroservicePython.test_utils import mock_request_validation
+
 from geetiles.services.redis_service import RedisService
-
-USERS = {
-    "ADMIN": {
-        "id": '1a10d7c6e0a37126611fd7a7',
-        "role": 'ADMIN',
-        "provider": 'local',
-        "email": 'user@control-tower.org',
-        "name": 'John Admin',
-        "extraUserData": {
-            "apps": [
-                'rw',
-                'gfw',
-                'gfw-climate',
-                'prep',
-                'aqueduct',
-                'forest-atlas',
-                'data4sdgs'
-            ]
-        }
-    },
-    "MANAGER": {
-        "id": '1a10d7c6e0a37126611fd7a7',
-        "role": 'MANAGER',
-        "provider": 'local',
-        "email": 'user@control-tower.org',
-        "extraUserData": {
-            "apps": [
-                'rw',
-                'gfw',
-                'gfw-climate',
-                'prep',
-                'aqueduct',
-                'forest-atlas',
-                'data4sdgs'
-            ]
-        }
-    },
-    "USER": {
-        "id": '1a10d7c6e0a37126611fd7a7',
-        "role": 'USER',
-        "provider": 'local',
-        "email": 'user@control-tower.org',
-        "extraUserData": {
-            "apps": [
-                'rw',
-                'gfw',
-                'gfw-climate',
-                'prep',
-                'aqueduct',
-                'forest-atlas',
-                'data4sdgs'
-            ]
-        }
-    },
-    "MICROSERVICE": {
-        "id": 'microservice'
-    },
-}
-
-
-@pytest.fixture
-def client():
-    app = geetiles.app
-    app.config['TESTING'] = True
-    client = app.test_client()
-
-    yield client
-
+from tests.fixtures import USERS
 
 @patch("geetiles.services.storage_service.storageClient")
 @requests_mock.mock(kw='mocker')
@@ -87,9 +20,19 @@ def test_expire_cache_as_microservice(storageClient, client, mocker):
     blob_from_list = MagicMock()
     list_blobs.return_value = [blob_from_list]
 
-    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['MICROSERVICE'])
+    get_user_data_calls = mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+        user=USERS["MICROSERVICE"],
+    )
 
-    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+    response = client.delete(
+        '/api/v1/layer/gee/testLayerId/expire-cache',
+        headers={
+            'Authorization': 'Bearer abcd',
+            'x-api-key': 'api-key-test'
+        }
+    )
     assert response.data == b''
     assert response.status_code == 200
     assert get_user_data_calls.called
@@ -102,9 +45,19 @@ def test_expire_cache_as_microservice(storageClient, client, mocker):
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_admin(client, mocker):
     # Deleting cache as a ADMIN-based user should return a 403
-    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['ADMIN'])
+    get_user_data_calls = mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+        user=USERS["ADMIN"],
+    )
 
-    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+    response = client.delete(
+        '/api/v1/layer/gee/testLayerId/expire-cache',
+        headers={
+            'Authorization': 'Bearer abcd',
+            'x-api-key': 'api-key-test'
+        }
+    )
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
     assert get_user_data_calls.called
@@ -114,10 +67,19 @@ def test_expire_cache_as_admin(client, mocker):
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_manager(client, mocker):
     # Deleting cache as a MANAGER-based user should return a 403
-    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['MANAGER'])
+    get_user_data_calls = mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+        user=USERS["MANAGER"],
+    )
 
     response = client.delete(
-        '/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+        '/api/v1/layer/gee/testLayerId/expire-cache',
+        headers={
+            'Authorization': 'Bearer abcd',
+            'x-api-key': 'api-key-test'
+        }
+    )
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
     assert get_user_data_calls.called
@@ -127,9 +89,19 @@ def test_expire_cache_as_manager(client, mocker):
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_user(client, mocker):
     # Deleting cache as a USER-based user should return a 403
-    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['USER'])
+    get_user_data_calls = mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+        user=USERS["USER"],
+    )
 
-    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache', headers={'Authorization': 'Bearer abcd'})
+    response = client.delete(
+        '/api/v1/layer/gee/testLayerId/expire-cache',
+        headers={
+            'Authorization': 'Bearer abcd',
+            'x-api-key': 'api-key-test'
+        }
+    )
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
     assert get_user_data_calls.called
@@ -139,9 +111,15 @@ def test_expire_cache_as_user(client, mocker):
 @requests_mock.mock(kw='mocker')
 def test_expire_cache_as_anon(client, mocker):
     # Deleting cache as a USER-based user should return a 403
-    get_user_data_calls = mocker.get(os.getenv('GATEWAY_URL') + '/auth/user/me', status_code=200, json=USERS['USER'])
+    get_user_data_calls = mock_request_validation(
+        mocker,
+        microservice_token=os.getenv("MICROSERVICE_TOKEN"),
+    )
 
-    response = client.delete('/api/v1/layer/gee/testLayerId/expire-cache')
+    response = client.delete(
+        '/api/v1/layer/gee/testLayerId/expire-cache',
+        headers={'x-api-key': 'api-key-test'}
+        )
     assert json.loads(response.data) == {'errors': [{'detail': 'Not authorized', 'status': 403}]}
     assert response.status_code == 403
-    assert get_user_data_calls.call_count == 0
+    assert get_user_data_calls.call_count == 1
