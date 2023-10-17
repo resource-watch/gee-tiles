@@ -13,6 +13,8 @@ services:
       REDIS_URL: redis://redis:6379
       GOOGLE_APPLICATION_CREDENTIALS: /opt/geetiles/storage.json
       ENVIRONMENT: test
+      AWS_REGION: "us-east-1"
+      REQUIRE_API_KEY: "True"
     command: test
     depends_on:
       - redis

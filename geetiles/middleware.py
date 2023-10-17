@@ -49,7 +49,7 @@ def get_layer(func):
         try:
             layer = kwargs['layer']
             logging.debug("get_layer - loading layer {} from LayerService".format(layer))
-            kwargs["layer_obj"] = LayerService.get(layer)
+            kwargs["layer_obj"] = LayerService.get(layer, request.headers.get("x-api-key"))
             return func(*args, **kwargs)
         except LayerNotFound as e:
             logging.error("get_layer - LayerNotFound - {}".format(e.message))
