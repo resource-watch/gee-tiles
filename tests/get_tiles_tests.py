@@ -60,7 +60,7 @@ def test_get_tile_cold_cache(storageClient, uuid, Image, getTileUrl, client, moc
     assert response.headers['Location'] == 'https://my-tile.server/1234/4/7/6.png'
     assert response.status_code == 302
 
-    assert RedisService.get('/api/v1/layer/1234/tile/gee/4/7/6') == b'https://my-tile.server/1234/4/7/6.png'
+    assert RedisService.get('/api/v1/layer/1234/tile/gee/4/7/6') == 'https://my-tile.server/1234/4/7/6.png'
 
     assert get_layer.called
     assert get_layer.call_count == 1
@@ -69,7 +69,7 @@ def test_get_tile_cold_cache(storageClient, uuid, Image, getTileUrl, client, moc
 @requests_mock.mock(kw='mocker')
 def test_get_tile_warm_cache(client, mocker):
     # Populate Redis cache
-    RedisService.set('/api/v1/layer/1234/tile/gee/4/7/6', b'https://my-tile.server/1234/4/7/6.png')
+    RedisService.set('/api/v1/layer/1234/tile/gee/4/7/6', 'https://my-tile.server/1234/4/7/6.png')
 
     mock_request_validation(
         mocker,
@@ -83,4 +83,4 @@ def test_get_tile_warm_cache(client, mocker):
     assert response.headers['Location'] == 'https://my-tile.server/1234/4/7/6.png'
     assert response.status_code == 302
 
-    assert RedisService.get('/api/v1/layer/1234/tile/gee/4/7/6') == b'https://my-tile.server/1234/4/7/6.png'
+    assert RedisService.get('/api/v1/layer/1234/tile/gee/4/7/6') == 'https://my-tile.server/1234/4/7/6.png'

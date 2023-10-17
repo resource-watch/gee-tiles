@@ -8,7 +8,7 @@ from geetiles.config import SETTINGS
 
 LOGGER_LEVEL = os.environ.get('LOGGER_LEVEL', 'WARN').upper()
 
-redis_connection = redis.StrictRedis.from_url(url=SETTINGS.get('redis').get('url'))
+redis_connection = redis.StrictRedis.from_url(url=SETTINGS.get('redis').get('url'), decode_responses=True)
 
 
 class RedisService(object):
