@@ -1,7 +1,6 @@
-Flask==1.1.1
-RWAPIMicroservicePython==1.0.0
+Flask==2.3.2
+RWAPIMicroservicePython==3.0.0
 requests==2.23.0
-Werkzeug==1.0.1
 earthengine-api==0.1.232
 redis==3.5.3
 google-cloud-storage==1.18.0

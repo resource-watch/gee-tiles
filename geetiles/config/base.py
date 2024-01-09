@@ -9,6 +9,7 @@ SETTINGS = {
         'level': 'DEBUG'
     },
     'service': {
+        'name': 'Google Earth Engine Tiles',
         'port': os.getenv('PORT')
     },
     'redis': {
