@@ -3,7 +3,7 @@
 import os
 
 import RWAPIMicroservicePython
-from flask import Flask
+from flask import Flask, jsonify
 
 from geetiles.config import SETTINGS
 from geetiles.routes.api import error
@@ -12,6 +12,13 @@ from geetiles.routes.api.v1 import tile_endpoints
 
 # Flask App
 app = Flask(__name__)
+
+
+# Health check
+@app.route("/healthcheck", methods=["GET"])
+def health_check():
+    return jsonify({"status": "ok"}), 200
+
 
 # Routing
 app.register_blueprint(tile_endpoints, url_prefix="/api/v1/layer")
